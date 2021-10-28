@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">session201</string>
+    <string name="go_to_first_activity">go to first activity</string>
+    <string name="go_to_second_activity">go to second activity</string>
+    <string name="go_to_third_activity">go to third activity</string>
+    <string name="go_to_fourth_activity">go to fourth activity</string>
+    <string name="hello_world_from_first_activity">hello world from first activity</string>
+    <string name="hello_world_from_second_activity">hello world from second activity</string>
+    <string name="send">Send</string>
+    <string name="call">Call</string>
+    <string name="email">Email</string>
+    <string name="to_main">To Main</string>
+</resources>
