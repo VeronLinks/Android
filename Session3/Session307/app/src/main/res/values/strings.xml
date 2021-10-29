@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Session307</string>
+    <string name="start_downloading_my_file">start downloading my file</string>
+    <string name="display_all_downloads">display all downloads</string>
+    <string name="check_status_of_download">check status of download</string>
+    <string name="cancel_the_current_download">cancel the current download</string>
+</resources>
