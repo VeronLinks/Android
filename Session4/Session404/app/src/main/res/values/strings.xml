@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Session404</string>
+    <string name="list">List</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="visible">Visible</string>
+    <string name="bluetooth">Bluetooth</string>
+</resources>
