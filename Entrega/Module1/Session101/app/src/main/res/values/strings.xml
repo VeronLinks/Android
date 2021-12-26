@@ -9,4 +9,7 @@
     <string name="execute">Execute</string>
     <string name="insert_the_number_that_appeared">Insert the number that appeared</string>
     <string name="check">Check</string>
+    <string name="about_us">About us</string>
+    <string name="back">Back</string>
+    <string name="developed_by_jorge_chueca">Developed by Jorge Chueca</string>
 </resources>
