@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="es.usj.mastertsa.jveron.session201">
 
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" android:minSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        android:minSdkVersion="30"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -14,9 +21,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Session201">
+        android:theme="@style/Theme.Session201"
+        android:fullBackupContent="true">
         <activity
-            android:name=".FourthActivity"
+            android:name=".EighthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,15 +33,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ThirdActivity"
+            android:name=".SeventhActivity"
             android:exported="true">
         </activity>
         <activity
+            android:name=".SixthActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FifthActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FourthActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ThirdActivity"
+            android:exported="true" />
+        <activity
             android:name=".SecondActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
