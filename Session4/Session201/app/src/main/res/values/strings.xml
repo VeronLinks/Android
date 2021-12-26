@@ -23,4 +23,10 @@
     <string name="ready">Ready</string>
     <string name="playing">Playing...</string>
     <string name="recording">Recording...</string>
+    <string name="default_audio_app">Default audio app</string>
+    <string name="hello_world">Hello World!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message">Message</string>
+    <string name="process">Process</string>
 </resources>
