@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Session 304</string>
+    <string name="get">Get</string>
+    <string name="take">Take</string>
+    <string name="load">Load</string>
+    <string name="image_loaded">Image loaded</string>
+    <string name="write_the_filename">Write the filename</string>
+    <string name="sample_jpg">sample.jpg</string>
+    <string name="selected_photo_from_the_list">Selected photo from the list</string>
+</resources>
