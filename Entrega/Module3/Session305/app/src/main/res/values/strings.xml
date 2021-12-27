@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Session305</string>
+    <string name="get">Play</string>
+    <string name="take">Record</string>
+    <string name="load">Load</string>
+    <string name="video_loaded">Video Loaded</string>
+    <string name="write_the_filename">Write filename</string>
+    <string name="sample_mp4">sample.mp4</string>
+    <string name="selected_video_from_the_list">Selected Video</string>
+</resources>
