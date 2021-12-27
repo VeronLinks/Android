@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Session402</string>
+    <string name="stop">Stop</string>
+    <string name="printTimestamp">Print Timestamp</string>
+</resources>

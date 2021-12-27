@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Session405</string>
+    <string name="logo">Logo</string>
+    <string name="latitude">Insert Latitude</string>
+    <string name="longitude">Insert Longitude</string>
+    <string name="localizar">Localizar</string>
+    <string name="title_activity_map">MapActivity</string>
+</resources>

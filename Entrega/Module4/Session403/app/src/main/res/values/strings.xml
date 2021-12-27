@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Session403</string>
+    <string name="max_acceleration">Max Acceleration</string>
+    <string name="max_X">Max X</string>
+    <string name="max_Y">Max Y</string>
+    <string name="_0_0">0.0</string>
+    <string name="max_Z">Max Z</string>
+    <string name="current_acceleration">Current Acceleration</string>
+    <string name="XAxis">X Axis</string>
+    <string name="YAxis">Y Axis</string>
+    <string name="ZAxis">Z Axis</string>
+</resources>
