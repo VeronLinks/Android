@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Session101">
         <activity
-            android:name=".EighthActivityB"
+            android:name=".NinthBActivity"
             android:exported="false" />
         <activity
-            android:name=".EighthActivityA"
+            android:name=".NinthAActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +22,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SeventhActivity"
+            android:name=".EighthActivityB"
+            android:exported="false" />
+        <activity
+            android:name=".EighthActivityA"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".SeventhActivity"
+            android:exported="true" />
         <activity
             android:name=".SixthActivity"
             android:exported="true" />

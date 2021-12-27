@@ -12,4 +12,7 @@
     <string name="about_us">About us</string>
     <string name="back">Back</string>
     <string name="developed_by_jorge_chueca">Developed by Jorge Chueca</string>
+    <string name="insert_the_website">Insert the website</string>
+    <string name="go">Go!</string>
+    <string name="insert_a_valid_url">Insert a valid URL</string>
 </resources>
