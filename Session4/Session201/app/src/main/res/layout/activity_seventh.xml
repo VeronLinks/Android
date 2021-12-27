@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SeventhActivity">
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:name="es.usj.mastertsa.jveron.session201.fragments.CountFragment"
