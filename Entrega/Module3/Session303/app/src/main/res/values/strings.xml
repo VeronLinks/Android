@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Session 303</string>
+    <string name="third">Third</string>
+    <string name="first">First</string>
+    <string name="second">Second</string>
+    <string name="master_tsa">Master TSA</string>
+    <string name="year">2021-22</string>
+</resources>
