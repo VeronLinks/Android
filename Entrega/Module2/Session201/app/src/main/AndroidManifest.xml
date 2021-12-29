@@ -26,10 +26,6 @@
         <activity
             android:name=".EighthActivity"
             android:exported="true">
-        </activity>
-        <activity
-            android:name=".SeventhActivity"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,23 +33,33 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SeventhActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".SixthActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".FifthActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".FourthActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".ThirdActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".SecondActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
