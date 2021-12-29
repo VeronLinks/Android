@@ -91,24 +91,16 @@ class ClaimRewardActivity : AppCompatActivity() {
 
         val viewIntent = Intent(this, MainActivity::class.java)
         startActivity(viewIntent)
+        finish()
 
     }
 
-    @SuppressLint("ObsoleteSdkInt")
     private fun getPicture() {
         if(uri != null) {
             var image: Bitmap? = null
             try {
-                image = if (Build.VERSION.SDK_INT > 27) {
-                    val source: ImageDecoder.Source =
-
-                        ImageDecoder.createSource(this.contentResolver, uri!!)
-                    ImageDecoder.decodeBitmap(source)
-                } else {
-                    // support older versions of Android by using getBitmap
-
-                    MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-                }
+                val source: ImageDecoder.Source =ImageDecoder.createSource(this.contentResolver, uri!!)
+                image = ImageDecoder.decodeBitmap(source)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
