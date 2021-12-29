@@ -3,6 +3,7 @@
     package="es.usj.mastertsa.jchueca.finalproject">
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -17,6 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalProject">
+        <activity
+            android:name=".PhotosMenuActivity"
+            android:exported="true" />
         <activity
             android:name=".ClaimRewardActivity"
             android:exported="true" />

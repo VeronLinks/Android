@@ -22,6 +22,9 @@ import java.io.IOException
 import java.util.*
 
 const val REWARD = 100
+const val PHOTOS_TITLE_PREFIX = "EIF_"
+const val PHOTOS_TITLE_FORMAT = "dd_MM_yyyy"
+const val PHOTOS_TITLE_SUFFIX = ".jpg"
 
 class ClaimRewardActivity : AppCompatActivity() {
 
@@ -63,8 +66,8 @@ class ClaimRewardActivity : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun takePhoto() {
-        val sdf = SimpleDateFormat("dd_M_yyyy")
-        val filename = sdf.format(Date()) + ".jpg"
+        val sdf = SimpleDateFormat(PHOTOS_TITLE_FORMAT)
+        val filename = PHOTOS_TITLE_PREFIX + sdf.format(Date()) + PHOTOS_TITLE_SUFFIX
         System.out.println(filename)
         val imageUri =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
