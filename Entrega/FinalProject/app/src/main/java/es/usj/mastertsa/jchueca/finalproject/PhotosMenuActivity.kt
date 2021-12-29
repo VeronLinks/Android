@@ -1,16 +1,13 @@
 package es.usj.mastertsa.jchueca.finalproject
 
-import android.R
+import android.R.layout
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityPhotosMenuBinding
 
@@ -25,15 +22,18 @@ class PhotosMenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bindings = ActivityPhotosMenuBinding.inflate(layoutInflater)
         setContentView(bindings.root)
-        supportActionBar!!.show()
+        supportActionBar!!.hide()
 
         retrievePhotoList()
         bindings.lvPhotos.adapter = ArrayAdapter(this,
-            R.layout.simple_list_item_1, titles)
+            layout.simple_list_item_1, titles)
         bindings.lvPhotos.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 bindings.ivSelectedPhoto.setImageURI(files[position])
             }
+        bindings.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
