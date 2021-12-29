@@ -21,6 +21,8 @@ import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityClaimRewardBind
 import java.io.IOException
 import java.util.*
 
+const val REWARD = 100
+
 class ClaimRewardActivity : AppCompatActivity() {
 
     private lateinit var bindings: ActivityClaimRewardBinding
@@ -41,6 +43,7 @@ class ClaimRewardActivity : AppCompatActivity() {
         bindings = ActivityClaimRewardBinding.inflate(layoutInflater)
         setContentView(bindings.root)
         supportActionBar!!.hide()
+
         askForPermission()
         bindings.btnBack.setOnClickListener {
             finish()
@@ -80,11 +83,12 @@ class ClaimRewardActivity : AppCompatActivity() {
     }
 
     private fun claimReward() {
-        var points = PointsManagement.instance
-        points.totalPoints += PointsManagement.POINTS_PER_REWARD
-        points.save()
+
+        SaveLoad.save(this, SaveLoad.load(this) + REWARD)
+
         val viewIntent = Intent(this, MainActivity::class.java)
         startActivity(viewIntent)
+
     }
 
     @SuppressLint("ObsoleteSdkInt")
