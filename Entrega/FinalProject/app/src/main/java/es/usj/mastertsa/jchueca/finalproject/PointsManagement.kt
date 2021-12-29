@@ -2,13 +2,13 @@ package es.usj.mastertsa.jchueca.finalproject
 
 import android.os.Environment
 
-class PointsManagement {
+class PointsManagement private constructor() {
 
     public var totalPoints : Int = 0
 
     private val path = Environment.getExternalStorageDirectory()
 
-    private constructor() {
+    init {
         load()
     }
 
@@ -25,16 +25,7 @@ class PointsManagement {
     companion object {
 
         public val POINTS_PER_REWARD = 100
-        private lateinit var instance: PointsManagement
-
-        public fun getInstance(): PointsManagement {
-
-            if (instance == null) {
-                instance = PointsManagement()
-            }
-
-            return instance;
-        }
+        val instance: PointsManagement = PointsManagement()
 
     }
 

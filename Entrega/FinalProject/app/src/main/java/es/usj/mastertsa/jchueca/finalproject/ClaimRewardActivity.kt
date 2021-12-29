@@ -80,7 +80,7 @@ class ClaimRewardActivity : AppCompatActivity() {
     }
 
     private fun claimReward() {
-        var points = PointsManagement.getInstance()
+        var points = PointsManagement.instance
         points.totalPoints += PointsManagement.POINTS_PER_REWARD
         points.save()
         val viewIntent = Intent(this, MainActivity::class.java)
