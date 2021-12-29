@@ -23,7 +23,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val task = object : TimerTask() {
             override fun run() {
                 val intent = Intent(this@SplashScreenActivity,
-                    MainActivity::class.java
+                    ClaimRewardActivity::class.java
                 )
                 startActivity(intent)
                 finish()
