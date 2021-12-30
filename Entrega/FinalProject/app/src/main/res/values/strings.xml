@@ -7,7 +7,6 @@
     <string name="go_to_maps">Go to maps</string>
     <string name="take">Take photo</string>
     <string name="image_loaded">TakenPhoto</string>
-    <string name="back">Go back</string>
     <string name="claim">Claim Reward</string>
     <string name="reward_text">You won 100 points! You can immortalize this achievement by taking a photo!</string>
     <string name="selected_photo_from_the_list">Selected photography of the list</string>
