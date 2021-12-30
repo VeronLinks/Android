@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="es.usj.mastertsa.jchueca.finalproject">
 
+    <uses-feature android:name="android.hardware.camera" />
   
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -13,9 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-  
-    <uses-feature android:name="android.hardware.camera" />
 
+    <permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
