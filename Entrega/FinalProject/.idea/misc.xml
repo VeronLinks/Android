@@ -12,7 +12,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/veron/tempUniversity/Android/Entrega/FinalProject/app/src/main/res/layout/activity_claim_reward.xml" value="0.25" />
         <entry key="..\:/Users/veron/tempUniversity/Android/Entrega/FinalProject/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/veron/tempUniversity/Android/Entrega/FinalProject/app/src/main/res/layout/activity_photos_menu.xml" value="0.33" />
+        <entry key="..\:/Users/veron/tempUniversity/Android/Entrega/FinalProject/app/src/main/res/menu/options_bar.xml" value="0.33" />
+        <entry key="..\:/Users/veron/tempUniversity/Android/Entrega/FinalProject/app/src/main/res/menu/options_menu.xml" value="0.13148148148148148" />
       </map>
     </option>
   </component>

@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">FinalProject</string>
+    <string name="app_name">Exercise is Fun!</string>
     <string name="logo">Logo</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="go_to_the_objective_to_gain_points">Go to the objective to gain points!</string>
     <string name="back">Go back</string>
     <string name="go_to_maps">Go to maps</string>
+    <string name="take">Take photo</string>
+    <string name="image_loaded">TakenPhoto</string>
+    <string name="back">Go back</string>
+    <string name="claim">Claim Reward</string>
+    <string name="reward_text">You won 100 points! You can immortalize this achievement by taking a photo!</string>
+    <string name="selected_photo_from_the_list">Selected photography of the list</string>
 </resources>

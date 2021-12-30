@@ -35,6 +35,10 @@ android {
     }
 
     apply plugin: 'kotlin-android-extensions'
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
