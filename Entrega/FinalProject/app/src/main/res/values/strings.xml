@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Exercise is Fun!</string>
     <string name="logo">Logo</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="go_to_the_objective_to_gain_points">Go to the objective to gain points!</string>
+    <string name="back">Go back</string>
+    <string name="go_to_maps">Go to maps</string>
     <string name="take">Take photo</string>
     <string name="image_loaded">TakenPhoto</string>
     <string name="back">Go back</string>
