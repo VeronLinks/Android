@@ -10,4 +10,6 @@
     <string name="claim">Claim Reward</string>
     <string name="reward_text">You won 100 points! You can immortalize this achievement by taking a photo!</string>
     <string name="selected_photo_from_the_list">Selected photography of the list</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
