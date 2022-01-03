@@ -13,4 +13,6 @@
     <string name="notification_default_text">Some challenges running in Exercise is Fun are now completed.</string>
     <string name="notification_default_summary">Challenges completed!</string>
     <string name="notification_default_title">Come back to Exercise is Fun to claim your rewards!</string>
+    <string name="main_menu_challenges_button">View challenges</string>
+    <string name="main_menu_photos_button">View all completed challenges photos</string>
 </resources>
