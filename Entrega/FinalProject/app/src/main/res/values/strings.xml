@@ -10,7 +10,11 @@
     <string name="claim">Claim Reward</string>
     <string name="reward_text">You won 100 points! You can immortalize this achievement by taking a photo!</string>
     <string name="selected_photo_from_the_list">Selected photography of the list</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="notification_default_text">Some challenges running in Exercise is Fun are now completed.</string>
+    <string name="notification_default_summary">Challenges completed!</string>
+    <string name="notification_default_title">Come back to Exercise is Fun to claim your rewards!</string>
+    <string name="main_menu_challenges_button">View challenges</string>
+    <string name="main_menu_photos_button">View all completed challenges photos</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="go_to_map">Go to map</string>
     <string name="cancel">Cancel</string>

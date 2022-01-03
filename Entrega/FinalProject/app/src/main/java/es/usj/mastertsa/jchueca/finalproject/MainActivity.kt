@@ -1,5 +1,6 @@
 package es.usj.mastertsa.jchueca.finalproject
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityMainBinding
@@ -13,6 +14,25 @@ class MainActivity : AppCompatActivity() {
         bindings = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-        bindings.tvExample.text = SaveLoad.load(this).toString()
+        bindings.btnChallenges.setOnClickListener {
+            val intent = Intent(this@MainActivity,
+                MainActivity::class.java
+            )
+            startActivity(intent)
+        }
+
+        bindings.btnViewAllPhotos.setOnClickListener {
+            val intent = Intent(this@MainActivity,
+                PhotosMenuActivity::class.java
+            )
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Update points
+        val totalPoints = SaveLoad.load(this).toString()
+        "Total points:\n$totalPoints".also { bindings.tvTotalPoints.text = it }
     }
 }
