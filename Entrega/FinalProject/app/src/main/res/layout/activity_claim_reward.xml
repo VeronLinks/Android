@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ClaimRewardActivity">
+    tools:context=".ClaimRewardActivity"
+    android:background="@color/md_yellow_100">
 
     <Button
         android:id="@+id/btnClaim"

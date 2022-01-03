@@ -12,7 +12,7 @@ import java.util.*
 class SplashScreenActivity : AppCompatActivity() {
 
     companion object {
-        private val SPLASH_SCREEN_DELAY: Long = 2000L
+        private val SPLASH_SCREEN_DELAY: Long = 1000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
