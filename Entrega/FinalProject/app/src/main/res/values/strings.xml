@@ -12,4 +12,9 @@
     <string name="selected_photo_from_the_list">Selected photography of the list</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="go_to_map">Go to map</string>
+    <string name="cancel">Cancel</string>
+    <string name="claim_reward">Claim Reward!</string>
+    <string name="congratulations">Congratulations! Now claim your reward</string>
+    <string name="accept">Accept</string>
 </resources>

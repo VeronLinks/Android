@@ -1,47 +1,67 @@
 package es.usj.mastertsa.jchueca.finalproject.fragments
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
-import es.usj.mastertsa.jchueca.finalproject.ARG_POSITION
-import es.usj.mastertsa.jchueca.finalproject.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import es.usj.mastertsa.jchueca.finalproject.*
+import es.usj.mastertsa.jchueca.finalproject.model.Challenge
 
 
 class ChallengesFragment : Fragment() {
-    var mCurrentPosition = -1
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        if (savedInstanceState != null) {
-            mCurrentPosition = savedInstanceState.getInt(ARG_POSITION)
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var isCompleted: Boolean = false
+    var challengeId: Int = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.findViewById<Button>(R.id.btnGoToMap)!!.setOnClickListener { goToMapOrClaim() }
+        activity?.findViewById<Button>(R.id.btnCancel)!!.setOnClickListener { cancel() }
+    }
+
+    public fun updateChallengeView(challenge: Challenge){
+        latitude = challenge.latitude
+        longitude = challenge.longitude
+        isCompleted = challenge.isCompleted
+        challengeId = challenge.id
+
+        activity?.findViewById<TextView>(R.id.tvChallengeId)!!.text = "Challenge ${challenge.id+1}"
+        activity?.findViewById<TextView>(R.id.tvDescription)!!.text = "${challenge.description}"
+        activity?.findViewById<TextView>(R.id.tvChallengesPoints)!!.text = "${challenge.points} pts"
+
+        if(isCompleted) {
+            activity?.findViewById<Button>(R.id.btnGoToMap)!!.text = getString(R.string.claim_reward)
+            activity?.findViewById<Button>(R.id.btnCancel)!!.isEnabled = false
+            activity?.findViewById<TextView>(R.id.tvDescription)!!.text = getString(R.string.congratulations)
         }
-        return inflater.inflate(R.layout.fragment_challenges, container, false)
-    }
 
-    override fun onStart() {
-        super.onStart()
-        val args = arguments
-        if (args != null) {
-            updateArticleView(args.getInt(ARG_POSITION))
-        } else if (mCurrentPosition != -1) {
-            updateArticleView(mCurrentPosition)
+        if (latitude == 0.0 && longitude == 0.0) {
+            activity?.findViewById<Button>(R.id.btnGoToMap)!!.text = getString(R.string.accept)
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ARG_POSITION, mCurrentPosition)
+    private fun goToMapOrClaim () {
+        if(isCompleted){ // Claim reward
+            val intent = Intent( activity, ClaimRewardActivity::class.java )
+            intent.putExtra("latitude", latitude)
+            intent.putExtra("longitude", longitude)
+            intent.putExtra("challengeId", challengeId)
+            startActivity(intent)
+        }else{ // Go to map
+            val intent = Intent( activity, MapActivity::class.java )
+            startActivity(intent)
+        }
     }
 
+    private fun cancel () {
 
-    fun updateArticleView(position: Int) {
-        val article = activity?.findViewById<TextView>(R.id.article)
-        article!!.text = Articles.get(position).content
-        mCurrentPosition = position
+        val challenge = Challenge(challengeId)
+        SaveLoad.saveChallenge(activity as AppCompatActivity, challenge)
+        updateChallengeView(challenge)
     }
 }

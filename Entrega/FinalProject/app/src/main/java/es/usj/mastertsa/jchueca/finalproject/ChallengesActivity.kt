@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityChallengesBinding
 import es.usj.mastertsa.jchueca.finalproject.fragments.ChallengesFragment
-import es.usj.mastertsa.jchueca.finalproject.fragments.MainMenuOptionsFragment
+import es.usj.mastertsa.jchueca.finalproject.model.Challenge
+import android.R
 
-val ARG_POSITION = "position"
 
-class ChallengesActivity : AppCompatActivity(), MainMenuOptionsFragment.OnHeadlineSelectedListener  {
+
+
+
+class ChallengesActivity : AppCompatActivity()  {
 
     private lateinit var bindings: ActivityChallengesBinding
 
@@ -18,27 +21,32 @@ class ChallengesActivity : AppCompatActivity(), MainMenuOptionsFragment.OnHeadli
         if (savedInstanceState != null) {
             return
         }
-        val firstFragment = MainMenuOptionsFragment()
-        firstFragment.arguments = intent.extras
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, firstFragment).commit()
+
+        initChallenges()
+
+        bindings.btnBack.setOnClickListener {
+            finish()
+        }
+
+        val challengesFragment = ChallengesFragment()
+        challengesFragment.arguments = intent.extras
     }
 
 
-    override fun onArticleSelected(position: Int) {
-        val articleFrag = supportFragmentManager.findFragmentById(R.id.fragment_container) as
-                ChallengesFragment?
-        if (articleFrag != null) {
-            articleFrag.updateArticleView(position)
-        } else {
-            val newFragment = ChallengesFragment()
-            val args = Bundle()
-            args.putInt(ARG_POSITION, position)
-            newFragment.arguments = args
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, newFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+
+    private fun initChallenges() {
+
+        for (i in 0..2) {
+            val challenge = SaveLoad.loadChallenge(this, i)
+            initChallengeFragment(challenge!!)
         }
+
+
+    }
+
+    private fun initChallengeFragment(challenge: Challenge) {
+        val challengeFrag = supportFragmentManager.
+            findFragmentByTag("frgChallenge${challenge.id}") as ChallengesFragment?
+        challengeFrag!!.updateChallengeView(challenge)
     }
 }

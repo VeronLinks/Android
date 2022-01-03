@@ -57,11 +57,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         bindings.btnBack.setOnClickListener { finish() }
 
         extra = intent.extras
-        longitude = extra?.getString("Longitud")
-        latitude = extra?.getString("Latitud")
+        var dLongitude = extra?.getDouble("longitude")
+        var dLatitude = extra?.getDouble("latitude")
 
-        val dLongitude = if(!longitude.isNullOrEmpty()) longitude?.toDouble() else -0.89135598
-        val dLatitude = if(!latitude.isNullOrEmpty()) latitude?.toDouble() else 41.64511038
+        // dLongitude = if(!longitude.isNullOrEmpty()) longitude?.toDouble() else -0.89135598
+        // dLatitude = if(!latitude.isNullOrEmpty()) latitude?.toDouble() else 41.64511038
+
         userLocation = LatLng1(dLatitude!!, dLongitude!!)
         targetLocation = getRandomLocation(userLocation, 1000)
 
