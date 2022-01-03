@@ -30,16 +30,26 @@ import kotlin.random.Random
 import android.R.attr.path
 import android.content.Intent
 import android.graphics.Color
+import android.location.Location
 import android.net.Uri
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.LatLng as LatLng1
+import com.google.android.gms.tasks.OnSuccessListener
+
+
+
 
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var longitude: String? = null
-    private var latitude: String? = null
+    private val RADIUS = 10;
+
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+
+    private var challengeId: Int = 0
     private var extra: Bundle? = null
     private var mapFragment: SupportMapFragment? = null
     private lateinit var map: GoogleMap
@@ -52,29 +62,34 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         bindings = ActivityMapBinding.inflate(layoutInflater)
         setContentView(bindings.root)
         bindings.btnBack.setOnClickListener { finish() }
 
         extra = intent.extras
-        var dLongitude = extra?.getDouble("longitude")
-        var dLatitude = extra?.getDouble("latitude")
-
-        // dLongitude = if(!longitude.isNullOrEmpty()) longitude?.toDouble() else -0.89135598
-        // dLatitude = if(!latitude.isNullOrEmpty()) latitude?.toDouble() else 41.64511038
-
-        userLocation = LatLng1(dLatitude!!, dLongitude!!)
-        targetLocation = getRandomLocation(userLocation, 1000)
+        challengeId = extra?.getInt("challengeId")!!
+        val dLongitude = extra?.getDouble("longitude")
+        val dLatitude = extra?.getDouble("latitude")
+        targetLocation = LatLng1(dLatitude!!, dLongitude!!)
 
         mapAvailable()
 
-        val gmmIntentUri = Uri.parse("http://maps.google.com/maps?" +
-                "saddr=${userLocation.latitude},${userLocation.longitude}&" +
-                "daddr=${targetLocation.latitude},${targetLocation.longitude}")
+        bindings.btnGoToMaps.isEnabled = false
+        supportActionBar!!.hide()
+    }
+
+    private fun setGoToMapsButton() {
+        val gmmIntentUri = Uri.parse(
+            "http://maps.google.com/maps?" +
+                    "saddr=${userLocation.latitude},${userLocation.longitude}&" +
+                    "daddr=${targetLocation.latitude},${targetLocation.longitude}"
+        )
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         mapIntent.setPackage("com.google.android.apps.maps")
         bindings.btnGoToMaps.setOnClickListener { startActivity(mapIntent) }
-
+        bindings.btnGoToMaps.isEnabled = true
     }
 
     private fun mapAvailable() {
@@ -109,6 +124,35 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
             map.isMyLocationEnabled = true
             map.moveCamera( CameraUpdateFactory.newLatLngZoom(userLocation, 20f))
+
+            fusedLocationClient!!.lastLocation
+                .addOnSuccessListener(this) { location ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        userLocation = LatLng1(location.latitude, location.longitude)
+                        var challenge = SaveLoad.loadChallenge(this, challengeId)!!
+
+                        if(targetLocation.latitude==0.0&&targetLocation.longitude==0.0){
+                            targetLocation = getRandomLocation(userLocation, RADIUS)
+                            challenge.latitude = targetLocation.latitude
+                            challenge.longitude = targetLocation.longitude
+                            val newAddress = geoCoder.getFromLocation(targetLocation.latitude, targetLocation.longitude, 1)
+                            challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
+
+                        }else{
+                            var results = FloatArray(1)
+                            Location.distanceBetween(userLocation.latitude, userLocation.longitude,
+                                                targetLocation.latitude, targetLocation.longitude,
+                                                results)
+                            if(results[0] < 20){
+                                challenge.isCompleted = true
+
+                                finish()
+                            }
+                        }
+                        SaveLoad.saveChallenge(this, challenge)
+                    }
+                }
 
             var addressCoordinates = "Sin Datos"
             if (addresses.size > 0) {

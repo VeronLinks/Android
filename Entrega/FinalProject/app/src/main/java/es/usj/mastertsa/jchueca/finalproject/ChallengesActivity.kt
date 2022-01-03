@@ -6,9 +6,7 @@ import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityChallengesBindi
 import es.usj.mastertsa.jchueca.finalproject.fragments.ChallengesFragment
 import es.usj.mastertsa.jchueca.finalproject.model.Challenge
 import android.R
-
-
-
+import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityMainBinding
 
 
 class ChallengesActivity : AppCompatActivity()  {
@@ -17,10 +15,12 @@ class ChallengesActivity : AppCompatActivity()  {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bindings = ActivityChallengesBinding.inflate(layoutInflater)
         setContentView(bindings.root)
         if (savedInstanceState != null) {
             return
         }
+        supportActionBar!!.hide()
 
         initChallenges()
 
@@ -32,13 +32,21 @@ class ChallengesActivity : AppCompatActivity()  {
         challengesFragment.arguments = intent.extras
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        // Update points
+        val totalPoints = SaveLoad.load(this).toString()
+        "Total points:\n$totalPoints".also { bindings.tvChallengesPoints.text = it }
+    }
 
     private fun initChallenges() {
 
         for (i in 0..2) {
-            val challenge = SaveLoad.loadChallenge(this, i)
-            initChallengeFragment(challenge!!)
+            var challenge = SaveLoad.loadChallenge(this, i)
+            if(challenge == null){
+                challenge = Challenge(i)
+            }
+            initChallengeFragment(challenge)
         }
 
 

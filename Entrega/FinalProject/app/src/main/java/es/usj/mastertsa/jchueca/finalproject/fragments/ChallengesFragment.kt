@@ -8,10 +8,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import es.usj.mastertsa.jchueca.finalproject.*
+import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityChallengesBinding
+import es.usj.mastertsa.jchueca.finalproject.databinding.FragmentChallengesBinding
 import es.usj.mastertsa.jchueca.finalproject.model.Challenge
 
 
 class ChallengesFragment : Fragment() {
+
+    private lateinit var bindings: FragmentChallengesBinding
 
     var latitude: Double = 0.0
     var longitude: Double = 0.0
@@ -20,8 +24,10 @@ class ChallengesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.findViewById<Button>(R.id.btnGoToMap)!!.setOnClickListener { goToMapOrClaim() }
-        activity?.findViewById<Button>(R.id.btnCancel)!!.setOnClickListener { cancel() }
+        bindings = FragmentChallengesBinding.inflate(layoutInflater)
+
+        bindings.btnGoToMap.setOnClickListener { goToMapOrClaim() }
+        bindings.btnCancel.setOnClickListener { cancel() }
     }
 
     public fun updateChallengeView(challenge: Challenge){
@@ -30,18 +36,18 @@ class ChallengesFragment : Fragment() {
         isCompleted = challenge.isCompleted
         challengeId = challenge.id
 
-        activity?.findViewById<TextView>(R.id.tvChallengeId)!!.text = "Challenge ${challenge.id+1}"
-        activity?.findViewById<TextView>(R.id.tvDescription)!!.text = "${challenge.description}"
-        activity?.findViewById<TextView>(R.id.tvChallengesPoints)!!.text = "${challenge.points} pts"
+        bindings.tvChallengeId.text = "Challenge ${challenge.id+1}"
+        bindings.tvDescription.text = "${challenge.description}"
+        bindings.tvChallengesPoints.text = "${challenge.points} pts"
 
         if(isCompleted) {
-            activity?.findViewById<Button>(R.id.btnGoToMap)!!.text = getString(R.string.claim_reward)
-            activity?.findViewById<Button>(R.id.btnCancel)!!.isEnabled = false
-            activity?.findViewById<TextView>(R.id.tvDescription)!!.text = getString(R.string.congratulations)
+            bindings.btnGoToMap.text = getString(R.string.claim_reward)
+            bindings.btnCancel.isEnabled = false
+            bindings.tvDescription.text = getString(R.string.congratulations)
         }
 
         if (latitude == 0.0 && longitude == 0.0) {
-            activity?.findViewById<Button>(R.id.btnGoToMap)!!.text = getString(R.string.accept)
+            bindings.btnGoToMap.text = getString(R.string.accept)
         }
     }
 
