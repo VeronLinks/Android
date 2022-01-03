@@ -5,7 +5,6 @@ import android.os.Bundle
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityChallengesBinding
 import es.usj.mastertsa.jchueca.finalproject.fragments.ChallengesFragment
 import es.usj.mastertsa.jchueca.finalproject.model.Challenge
-import android.R
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityMainBinding
 
 
@@ -22,14 +21,11 @@ class ChallengesActivity : AppCompatActivity()  {
         }
         supportActionBar!!.hide()
 
-        initChallenges()
-
         bindings.btnBack.setOnClickListener {
             finish()
         }
 
-        val challengesFragment = ChallengesFragment()
-        challengesFragment.arguments = intent.extras
+        initChallenges()
     }
 
     override fun onResume() {
@@ -46,15 +42,30 @@ class ChallengesActivity : AppCompatActivity()  {
             if(challenge == null){
                 challenge = Challenge(i)
             }
-            initChallengeFragment(challenge)
+            createChallengesFragments(challenge)
         }
-
 
     }
 
-    private fun initChallengeFragment(challenge: Challenge) {
-        val challengeFrag = supportFragmentManager.
-            findFragmentByTag("frgChallenge${challenge.id}") as ChallengesFragment?
-        challengeFrag!!.updateChallengeView(challenge)
+    private fun createChallengesFragments(challenge: Challenge){
+        var id = R.id.frgChallenge0
+        if (challenge.id == 1){
+            id = R.id.frgChallenge1
+        }
+        else if (challenge.id == 2){
+            id = R.id.frgChallenge2
+        }
+
+        val challengeFrag = supportFragmentManager.findFragmentById(id) as
+                ChallengesFragment?
+        if (challengeFrag == null) {
+            val newFragment = ChallengesFragment()
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(id, newFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        challengeFrag!!.initializeChallenge(challenge)
     }
 }

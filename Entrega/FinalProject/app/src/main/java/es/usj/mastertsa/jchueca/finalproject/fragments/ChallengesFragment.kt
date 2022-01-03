@@ -3,6 +3,9 @@ package es.usj.mastertsa.jchueca.finalproject.fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,37 +20,50 @@ class ChallengesFragment : Fragment() {
 
     private lateinit var bindings: FragmentChallengesBinding
 
+    var initializedChallenge : Challenge? = null
     var latitude: Double = 0.0
     var longitude: Double = 0.0
     var isCompleted: Boolean = false
     var challengeId: Int = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         bindings = FragmentChallengesBinding.inflate(layoutInflater)
-
         bindings.btnGoToMap.setOnClickListener { goToMapOrClaim() }
         bindings.btnCancel.setOnClickListener { cancel() }
+        updateChallengeView()
+
+        return inflater.inflate(R.layout.fragment_challenges, container, false)
     }
 
-    public fun updateChallengeView(challenge: Challenge){
-        latitude = challenge.latitude
-        longitude = challenge.longitude
-        isCompleted = challenge.isCompleted
-        challengeId = challenge.id
+    public fun initializeChallenge(challenge: Challenge){
+        initializedChallenge = challenge
+    }
 
-        bindings.tvChallengeId.text = "Challenge ${challenge.id+1}"
-        bindings.tvDescription.text = "${challenge.description}"
-        bindings.tvChallengesPoints.text = "${challenge.points} pts"
+    private fun updateChallengeView(){
+        if (initializedChallenge != null){
+            val challenge : Challenge = initializedChallenge!!
 
-        if(isCompleted) {
-            bindings.btnGoToMap.text = getString(R.string.claim_reward)
-            bindings.btnCancel.isEnabled = false
-            bindings.tvDescription.text = getString(R.string.congratulations)
-        }
+            latitude = challenge.latitude
+            longitude = challenge.longitude
+            isCompleted = challenge.isCompleted
+            challengeId = challenge.id
 
-        if (latitude == 0.0 && longitude == 0.0) {
-            bindings.btnGoToMap.text = getString(R.string.accept)
+            bindings.tvChallengeId.text = "Challenge ${challenge.id+1}"
+            bindings.tvDescription.text = "${challenge.description}"
+            bindings.tvChallengesPoints.text = "${challenge.points} pts"
+
+            if(isCompleted) {
+                bindings.btnGoToMap.text = getString(R.string.claim_reward)
+                bindings.btnCancel.isEnabled = false
+                bindings.tvDescription.text = getString(R.string.congratulations)
+            }
+
+            if (latitude == 0.0 && longitude == 0.0) {
+                bindings.btnGoToMap.text = getString(R.string.accept)
+            }
         }
     }
 
@@ -68,6 +84,7 @@ class ChallengesFragment : Fragment() {
 
         val challenge = Challenge(challengeId)
         SaveLoad.saveChallenge(activity as AppCompatActivity, challenge)
-        updateChallengeView(challenge)
+        initializedChallenge = challenge
+        updateChallengeView()
     }
 }
