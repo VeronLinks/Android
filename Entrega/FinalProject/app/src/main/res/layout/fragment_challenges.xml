@@ -15,6 +15,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/challenge_default"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/loading"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.461"
@@ -48,7 +51,7 @@
         android:layout_width="71dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:enabled="false"
         android:paddingHorizontal="0dp"
         android:text="@string/refresh"
@@ -57,7 +60,6 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tvDescription"
-        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvChallengeId" />
 
@@ -66,7 +68,7 @@
         android:layout_width="91dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:paddingHorizontal="0dp"
         android:text="@string/go_to_map"
         android:textAllCaps="false"
@@ -74,5 +76,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvDescription"
-        app:layout_constraintTop_toBottomOf="@+id/tvChallengesPoints" />
+        app:layout_constraintTop_toBottomOf="@+id/tvChallengeId" />
 </androidx.constraintlayout.widget.ConstraintLayout>
