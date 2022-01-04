@@ -43,8 +43,8 @@ import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBui
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
 
-private const val RADIUS = 10
-private const val MIN_DISTANCE_TO_COMPLETE = 1000
+private const val RADIUS = 500
+private const val MIN_DISTANCE_TO_COMPLETE = 20
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
