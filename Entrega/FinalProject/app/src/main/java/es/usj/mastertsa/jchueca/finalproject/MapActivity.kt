@@ -1,7 +1,7 @@
 package es.usj.mastertsa.jchueca.finalproject
 
 import android.Manifest
-import android.R.attr
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -16,18 +16,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.maps.DirectionsApi
-import com.google.maps.DirectionsApiRequest
-import com.google.maps.GeoApiContext
 import com.google.maps.model.*
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityMapBinding
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.*
 import kotlin.random.Random
-import android.R.attr.path
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
@@ -43,16 +38,15 @@ import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.LatLng as LatLng1
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBuilder
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
 
+private const val RADIUS = 10
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val RADIUS = 10;
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
 
@@ -133,33 +127,31 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationClient!!.lastLocation
                 .addOnSuccessListener(this) { location ->
                     // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                        userLocation = LatLng1(location.latitude, location.longitude)
-                        var challenge = SaveLoad.loadChallenge(this, challengeId)!!
+                    userLocation = LatLng1(location.latitude, location.longitude)
+                    val challenge = SaveLoad.loadChallenge(this, challengeId)!!
 
-                        if(targetLocation.latitude==0.0&&targetLocation.longitude==0.0){
-                            targetLocation = getRandomLocation(userLocation, RADIUS)
-                            challenge.latitude = targetLocation.latitude
-                            challenge.longitude = targetLocation.longitude
-                            val newAddress = geoCoder.getFromLocation(targetLocation.latitude, targetLocation.longitude, 1)
-                            challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
+                    if(targetLocation.latitude==0.0&&targetLocation.longitude==0.0){
+                        targetLocation = getRandomLocation(userLocation)
+                        challenge.latitude = targetLocation.latitude
+                        challenge.longitude = targetLocation.longitude
+                        val newAddress = geoCoder.getFromLocation(targetLocation.latitude, targetLocation.longitude, 1)
+                        challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
 
-                        }
-                        var results = FloatArray(1)
-                        Location.distanceBetween(userLocation.latitude, userLocation.longitude,
-                            targetLocation.latitude, targetLocation.longitude,
-                            results)
-                        if(results[0] < 20){
-                            challenge.isCompleted = true
-
-                            showNotification(true)
-
-                            finish()
-                        }
-                        SaveLoad.saveChallenge(this, challenge)
-                        setGoToMapsButton()
-                        setMapOnceUserLocationExists(geoCoder)
                     }
+                    val results = FloatArray(1)
+                    Location.distanceBetween(userLocation.latitude, userLocation.longitude,
+                        targetLocation.latitude, targetLocation.longitude,
+                        results)
+                    if(results[0] < 20){
+                        challenge.isCompleted = true
+
+                        showNotification()
+
+                        finish()
+                    }
+                    SaveLoad.saveChallenge(this, challenge)
+                    setGoToMapsButton()
+                    setMapOnceUserLocationExists(geoCoder)
                 }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -224,74 +216,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null)
     }
 
-    private fun getDirection(origin: LatLng1, destination: LatLng1): List<LatLng1>{
-
-        val path: MutableList<LatLng1> = ArrayList()
-
-        //Execute Directions API request
-        val apiKey = resources.getString( R.string.google_maps_key)
-        val context: GeoApiContext = GeoApiContext.Builder()
-            .apiKey(apiKey)
-            .build()
-        val req: DirectionsApiRequest =
-            DirectionsApi.getDirections(context, origin.toString(), destination.toString())
-        try {
-            val res: DirectionsResult = req.await()
-
-            //Loop through legs and steps to get encoded polylines of each step
-            if (res.routes != null && res.routes.isNotEmpty()) {
-                val route: DirectionsRoute = res.routes[0]
-                if (route.legs != null) {
-                    for (i in route.legs.indices) {
-                        val leg: DirectionsLeg = route.legs[i]
-                        if (leg.steps != null) {
-                            for (j in leg.steps.indices) {
-                                val step: DirectionsStep = leg.steps[j]
-                                if (step.steps != null && step.steps.isNotEmpty()) {
-                                    for (k in step.steps.indices) {
-                                        val step1: DirectionsStep = step.steps[k]
-                                        val points1: EncodedPolyline = step1.polyline
-                                        //Decode polyline and add points to list of route coordinates
-                                        val coords1: MutableList<com.google.maps.model.LatLng>? = points1.decodePath()
-                                        if (coords1 != null) {
-                                            for (coord1 in coords1) {
-                                                path.add(LatLng1(coord1.lat, coord1.lng))
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    val points: EncodedPolyline = step.polyline
-                                    //Decode polyline and add points to list of route coordinates
-                                    val coords: MutableList<com.google.maps.model.LatLng>? = points.decodePath()
-                                    if (coords != null) {
-                                        for (coord in coords) {
-                                            path.add(LatLng1(coord.lat, coord.lng))
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {
-
-            path.add(origin)
-            path.add(destination)
-            //path.add(LatLng1(origin.latitude, origin.longitude))
-            //path.add(LatLng1(destination.latitude, destination.longitude))
-            e.printStackTrace()
-        }
-        return path;
-    }
-
-    private fun getRandomLocation(point: LatLng1, radius: Int): LatLng1 {
+    private fun getRandomLocation(point: LatLng1): LatLng1 {
 
         val x0: Double = point.latitude
         val y0: Double = point.longitude
 
         // Convert radius from meters to degrees
-        val radiusInDegrees = (radius / 111000.0)
+        val radiusInDegrees = (RADIUS / 111000.0)
         val v: Double = Random.nextDouble()
         val t = 2 * Math.PI * v
         val x = radiusInDegrees * cos(t)
@@ -307,7 +238,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     // NOTIFICATIONS
-    private fun showNotification(isStarting: Boolean) {
+    private fun showNotification(isStarting: Boolean = true) {
         enableNotifications()
         generateNotification(isStarting)
     }
@@ -319,8 +250,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun enableNotifications() {
         val enabled = notificationManager.areNotificationsEnabled()
         if (!enabled){
-            val snackBar = Snackbar.make(
-                findViewById(R.id.mainLayout), // TODO: Desde recompensas
+            Snackbar.make(
+                findViewById(R.id.mainLayout),
                 "Enable notifications",
                 Snackbar.LENGTH_LONG
             ).setAction("ENABLE"){
@@ -329,8 +260,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun generateNotification(starting: Boolean) {
-        var notification = if (starting) NotificationDatabase.enteringNotification
+        val notification = if (starting) NotificationDatabase.enteringNotification
         else NotificationDatabase.existingNotification(applicationContext)
         val channelId = NotificationUtils.createNotificationChannel(this, notification)
         val notificationStyle = NotificationCompat.BigTextStyle()
