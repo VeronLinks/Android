@@ -5,7 +5,6 @@ data class Challenge (
     var description: String,
     var points: Int,
     var isCompleted: Boolean,
-    //var address: String,
     var latitude: Double,
     var longitude: Double){
 

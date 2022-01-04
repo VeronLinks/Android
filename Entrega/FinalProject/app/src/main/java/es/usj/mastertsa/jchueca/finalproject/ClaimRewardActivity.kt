@@ -47,7 +47,6 @@ class ClaimRewardActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.TakePicture())
         {
             if (it != false) {
-                //bindings.imageView.setImageURI(uri)
                 Toast.makeText(this, "Photo taken!",
                     Toast.LENGTH_SHORT).show()
             }

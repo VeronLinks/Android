@@ -104,9 +104,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment!!.getMapAsync(this@MapActivity)
         }
-        //if (mapFragment != null) {
-        //    Toast.makeText(this, "MapActivity de Google available", Toast.LENGTH_SHORT).show()
-        //}
     }
 
 
@@ -153,17 +150,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
 
                 }
-                val results = FloatArray(1)
-                Location.distanceBetween(userLocation.latitude, userLocation.longitude,
-                    targetLocation.latitude, targetLocation.longitude,
-                    results)
-                if(results[0] < MIN_DISTANCE_TO_COMPLETE){
-                    challenge.isCompleted = true
 
-                    showNotification()
+                checkDistance(challenge)
 
-                    finish()
-                }
                 SaveLoad.saveChallenge(this, challenge)
 
                 if (firstTime) {
@@ -172,6 +161,22 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     bindings.tvMapDescription.text = challenge.description
                 }
             }
+    }
+
+    private fun checkDistance(challenge: Challenge) {
+        val results = FloatArray(1)
+        Location.distanceBetween(
+            userLocation.latitude, userLocation.longitude,
+            targetLocation.latitude, targetLocation.longitude,
+            results
+        )
+        if (results[0] < MIN_DISTANCE_TO_COMPLETE) {
+            challenge.isCompleted = true
+
+            showNotification()
+
+            finish()
+        }
     }
 
     private fun setMapOnceUserLocationExists(geoCoder: Geocoder) {
@@ -199,26 +204,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     + ", " + address!!.countryName)
         }
 
-        map.addMarker(
-            MarkerOptions()
-                .title(addressCoordinates)
-                .position(userLocation)
-        )
+        map.addMarker(MarkerOptions().title(addressCoordinates).position(userLocation))
 
-        map.addMarker(
-            MarkerOptions()
-                .title(addressCoordinates)
-                .position(targetLocation)
-        )
+        map.addMarker(MarkerOptions().title(addressCoordinates).position(targetLocation))
 
-        //Draw the line
-        val path: MutableList<LatLng1> = ArrayList()
-        path.add(userLocation)
-        path.add(targetLocation)
-        if (path.isNotEmpty()) {
-            val opts = PolylineOptions().addAll(path).color(Color.BLUE).width(5f)
-            map.addPolyline(opts)
-        }
+        drawLine()
 
         val cameraPosition = CameraPosition.builder()
             .target(userLocation)
@@ -228,6 +218,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()
 
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null)
+    }
+
+    private fun drawLine() {
+        val path: MutableList<LatLng1> = ArrayList()
+        path.add(userLocation)
+        path.add(targetLocation)
+        if (path.isNotEmpty()) {
+            val opts = PolylineOptions().addAll(path).color(Color.BLUE).width(5f)
+            map.addPolyline(opts)
+        }
     }
 
     private fun getRandomLocation(point: LatLng1): LatLng1 {

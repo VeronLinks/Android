@@ -1,7 +1,6 @@
 package es.usj.mastertsa.jchueca.finalproject.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,10 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import es.usj.mastertsa.jchueca.finalproject.*
 import es.usj.mastertsa.jchueca.finalproject.model.Challenge
-
-
-
-
 
 class ChallengesFragment : Fragment() {
 
@@ -82,11 +77,12 @@ class ChallengesFragment : Fragment() {
     }
 
     private fun goToMapOrClaim () {
-        if(isCompleted){ // Claim reward
+        if (isCompleted) { // Claim reward
             val intent = Intent( activity, ClaimRewardActivity::class.java )
             intent.putExtra("challengeId", challengeId)
             startActivity(intent)
-        }else{ // Go to map
+        }
+        else { // Go to map
 
             val intent = Intent( activity, MapActivity::class.java )
             intent.putExtra("latitude", latitude)
