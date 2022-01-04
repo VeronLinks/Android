@@ -38,6 +38,7 @@ class ChallengesFragment : Fragment() {
 
     public fun initializeChallenge(challenge: Challenge){
         initializedChallenge = challenge
+        updateChallengeView()
     }
 
     private fun updateChallengeView(){
