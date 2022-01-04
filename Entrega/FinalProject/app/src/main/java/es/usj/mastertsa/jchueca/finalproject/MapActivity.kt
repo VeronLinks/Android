@@ -39,6 +39,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.LatLng as LatLng1
 import com.google.android.material.snackbar.Snackbar
+import es.usj.mastertsa.jchueca.finalproject.model.Challenge
 import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBuilder
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
@@ -50,6 +51,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
+    private lateinit var geoCoder : Geocoder
 
     private var challengeId: Int = 0
     private var extra: Bundle? = null
@@ -69,6 +71,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         bindings = ActivityMapBinding.inflate(layoutInflater)
         setContentView(bindings.root)
         bindings.btnBack.setOnClickListener { finish() }
+        bindings.btnCheckReward.setOnClickListener { generateData(SaveLoad.loadChallenge(this, challengeId)!!, false) }
 
         enableNotifications()
 
@@ -109,6 +112,22 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
 
+        try {
+            geoCoder = Geocoder(this, Locale.getDefault())
+            map = googleMap
+            map.mapType = GoogleMap.MAP_TYPE_NORMAL
+
+            val challenge = SaveLoad.loadChallenge(this, challengeId)!!
+
+            generateData(challenge, true)
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun generateData(challenge : Challenge, firstTime : Boolean) {
         if     (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)   != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -121,47 +140,39 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
 
-        try {
-            val geoCoder = Geocoder(this, Locale.getDefault())
-            map = googleMap
-            map.mapType = GoogleMap.MAP_TYPE_NORMAL
+        fusedLocationClient!!.lastLocation
+            .addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                userLocation = LatLng1(location.latitude, location.longitude)
 
-            fusedLocationClient!!.lastLocation
-                .addOnSuccessListener(this) { location ->
-                    // Got last known location. In some rare situations this can be null.
-                    userLocation = LatLng1(location.latitude, location.longitude)
-                    val challenge = SaveLoad.loadChallenge(this, challengeId)!!
+                if(targetLocation.latitude==0.0&&targetLocation.longitude==0.0){
+                    targetLocation = getRandomLocation(userLocation)
+                    challenge.latitude = targetLocation.latitude
+                    challenge.longitude = targetLocation.longitude
+                    val newAddress = geoCoder.getFromLocation(targetLocation.latitude, targetLocation.longitude, 1)
+                    challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
 
-                    if(targetLocation.latitude==0.0&&targetLocation.longitude==0.0){
-                        targetLocation = getRandomLocation(userLocation)
-                        challenge.latitude = targetLocation.latitude
-                        challenge.longitude = targetLocation.longitude
-                        val newAddress = geoCoder.getFromLocation(targetLocation.latitude, targetLocation.longitude, 1)
-                        challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
+                }
+                val results = FloatArray(1)
+                Location.distanceBetween(userLocation.latitude, userLocation.longitude,
+                    targetLocation.latitude, targetLocation.longitude,
+                    results)
+                if(results[0] < MIN_DISTANCE_TO_COMPLETE){
+                    challenge.isCompleted = true
 
-                    }
-                    val results = FloatArray(1)
-                    Location.distanceBetween(userLocation.latitude, userLocation.longitude,
-                        targetLocation.latitude, targetLocation.longitude,
-                        results)
-                    if(results[0] < MIN_DISTANCE_TO_COMPLETE){
-                        challenge.isCompleted = true
+                    showNotification()
 
-                        showNotification()
+                    finish()
+                }
+                SaveLoad.saveChallenge(this, challenge)
 
-                        finish()
-                    }
-                    SaveLoad.saveChallenge(this, challenge)
+                if (firstTime) {
                     setGoToMapsButton()
                     setMapOnceUserLocationExists(geoCoder)
                     bindings.tvMapDescription.text = challenge.description
                 }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
+            }
     }
-
 
     private fun setMapOnceUserLocationExists(geoCoder: Geocoder) {
         val addresses = geoCoder.getFromLocation(userLocation.latitude, userLocation.longitude, 5)

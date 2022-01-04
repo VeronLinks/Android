@@ -23,4 +23,5 @@
     <string name="accept">Accept</string>
     <string name="challenge_default">Challenge</string>
     <string name="loading">Loading…</string>
+    <string name="check_distance">Check distance</string>
 </resources>
