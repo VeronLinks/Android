@@ -28,19 +28,26 @@ import kotlin.collections.ArrayList
 import kotlin.math.*
 import kotlin.random.Random
 import android.R.attr.path
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.location.Location
 import android.net.Uri
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.LatLng as LatLng1
 import com.google.android.gms.tasks.OnSuccessListener
-
-
-
+import com.google.android.material.snackbar.Snackbar
+import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBuilder
+import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
+import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
 
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -67,6 +74,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         bindings = ActivityMapBinding.inflate(layoutInflater)
         setContentView(bindings.root)
         bindings.btnBack.setOnClickListener { finish() }
+
+        enableNotifications()
 
         extra = intent.extras
         challengeId = extra?.getInt("challengeId")!!
@@ -112,14 +121,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             if     (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)   != PackageManager.PERMISSION_GRANTED
                  && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                // TODO: Request permissions in the previous activity.
-                    // Remember to disable the permissions in the mobile to check if this works
-                    // https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
 
                 ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                     PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this, "Please allow location permissions", Toast.LENGTH_SHORT).show()
+                finish()
                 return
             }
 
@@ -145,6 +152,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                         if(results[0] < 20){
                             challenge.isCompleted = true
 
+                            showNotification(true)
+
                             finish()
                         }
                         SaveLoad.saveChallenge(this, challenge)
@@ -158,6 +167,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+
     private fun setMapOnceUserLocationExists(geoCoder: Geocoder) {
         val addresses = geoCoder.getFromLocation(userLocation.latitude, userLocation.longitude, 5)
 
@@ -169,13 +179,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         map.isMyLocationEnabled = true
@@ -301,4 +304,87 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         return LatLng1(foundLatitude, foundLongitude)
     }
+
+
+    // NOTIFICATIONS
+    private fun showNotification(isStarting: Boolean) {
+        enableNotifications()
+        generateNotification(isStarting)
+    }
+
+    private val notificationManager : NotificationManagerCompat by lazy {
+        NotificationManagerCompat.from(applicationContext)
+    }
+
+    private fun enableNotifications() {
+        val enabled = notificationManager.areNotificationsEnabled()
+        if (!enabled){
+            val snackBar = Snackbar.make(
+                findViewById(R.id.mainLayout), // TODO: Desde recompensas
+                "Enable notifications",
+                Snackbar.LENGTH_LONG
+            ).setAction("ENABLE"){
+                openNotificationsSettingsForApp()
+            }.show()
+        }
+    }
+
+    private fun generateNotification(starting: Boolean) {
+        var notification = if (starting) NotificationDatabase.enteringNotification
+        else NotificationDatabase.existingNotification(applicationContext)
+        val channelId = NotificationUtils.createNotificationChannel(this, notification)
+        val notificationStyle = NotificationCompat.BigTextStyle()
+            .bigText(notification.text)
+            .setBigContentTitle(notification.title)
+            .setSummaryText(notification.summary)
+
+        val notifyIntent = Intent(this, ChallengesActivity::class.java)
+        notifyIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val notifyPendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notifyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val notificationCompatBuilder: NotificationCompat.Builder = NotificationCompat.Builder(
+            applicationContext, channelId!!
+        )
+        GlobalNotificationBuilder.notificationCompatBuilderInstance = notificationCompatBuilder
+
+        val playingNotification: Notification = notificationCompatBuilder
+            .setStyle(notificationStyle)
+            .setContentTitle(notification.contentTitle)
+            .setContentText(notification.contentText)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentIntent(notifyPendingIntent)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setColor(ContextCompat.getColor(applicationContext, R.color.purple_500))
+            .setCategory(Notification.CATEGORY_REMINDER)
+            .setPriority(notification.priority)
+            .setVisibility(notification.channelLockscreenVisibility)
+            .build()
+        notificationManager.notify(
+            current_id,
+            playingNotification
+        )
+    }
+
+    companion object {
+        var current_id = 0
+    }
+
+    private fun openNotificationsSettingsForApp() {
+        val intent = Intent()
+        intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+        intent.putExtra("app_package", packageName)
+        intent.putExtra("app_uid", applicationInfo.uid)
+        startActivity(intent)
+    }
+
 }

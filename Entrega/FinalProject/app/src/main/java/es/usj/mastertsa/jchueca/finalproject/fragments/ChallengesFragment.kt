@@ -81,6 +81,7 @@ class ChallengesFragment : Fragment() {
             intent.putExtra("challengeId", challengeId)
             startActivity(intent)
         }else{ // Go to map
+
             val intent = Intent( activity, MapActivity::class.java )
             intent.putExtra("latitude", latitude)
             intent.putExtra("longitude", longitude)
