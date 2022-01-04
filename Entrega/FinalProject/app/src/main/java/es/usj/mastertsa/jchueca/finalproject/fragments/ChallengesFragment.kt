@@ -70,6 +70,9 @@ class ChallengesFragment : Fragment() {
             if (latitude == 0.0 && longitude == 0.0) {
                 bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.accept)
             }
+            else {
+                bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.go_to_map)
+            }
 
             SaveLoad.saveChallenge(activity as AppCompatActivity, challenge)
         }

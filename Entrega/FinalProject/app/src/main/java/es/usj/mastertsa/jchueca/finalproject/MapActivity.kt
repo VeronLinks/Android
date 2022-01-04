@@ -43,7 +43,7 @@ import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBui
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
 
-private const val RADIUS = 1000
+private const val RADIUS = 100
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
