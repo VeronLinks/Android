@@ -21,4 +21,6 @@
     <string name="claim_reward">Claim Reward!</string>
     <string name="congratulations">Congratulations! Now claim your reward</string>
     <string name="accept">Accept</string>
+    <string name="challenge_default">Challenge</string>
+    <string name="loading">Loading…</string>
 </resources>

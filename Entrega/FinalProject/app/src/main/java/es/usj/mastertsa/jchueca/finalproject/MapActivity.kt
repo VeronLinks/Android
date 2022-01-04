@@ -43,7 +43,7 @@ import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBui
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
 
-private const val RADIUS = 10
+private const val RADIUS = 1000
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -107,22 +107,23 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     override fun onMapReady(googleMap: GoogleMap) {
+
+        if     (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)   != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                PackageManager.PERMISSION_GRANTED)
+            Toast.makeText(this, "Please allow location permissions", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         try {
             val geoCoder = Geocoder(this, Locale.getDefault())
             map = googleMap
             map.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-            if     (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)   != PackageManager.PERMISSION_GRANTED
-                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this, "Please allow location permissions", Toast.LENGTH_SHORT).show()
-                finish()
-                return
-            }
 
             fusedLocationClient!!.lastLocation
                 .addOnSuccessListener(this) { location ->
