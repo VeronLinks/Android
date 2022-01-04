@@ -97,19 +97,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment!!.getMapAsync(this@MapActivity)
         }
-        if (mapFragment != null) {
-            Toast.makeText(this, "MapActivity de Google available", Toast.LENGTH_SHORT).show()
-        }
+        //if (mapFragment != null) {
+        //    Toast.makeText(this, "MapActivity de Google available", Toast.LENGTH_SHORT).show()
+        //}
     }
 
 
     override fun onMapReady(googleMap: GoogleMap) {
         try {
             val geoCoder = Geocoder(this, Locale.getDefault())
-            val addresses = geoCoder.getFromLocation(userLocation.latitude, userLocation.longitude, 5)
             map = googleMap
             map.mapType = GoogleMap.MAP_TYPE_NORMAL
-
 
             if     (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)   != PackageManager.PERMISSION_GRANTED
                  && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -117,13 +115,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 // TODO: Request permissions in the previous activity.
                     // Remember to disable the permissions in the mobile to check if this works
                     // https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
+
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                    PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this, "Please allow location permissions", Toast.LENGTH_SHORT).show()
-                finish()
                 return
             }
-
-            map.isMyLocationEnabled = true
-            map.moveCamera( CameraUpdateFactory.newLatLngZoom(userLocation, 20f))
 
             fusedLocationClient!!.lastLocation
                 .addOnSuccessListener(this) { location ->
@@ -139,61 +137,88 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                             val newAddress = geoCoder.getFromLocation(targetLocation.latitude, targetLocation.longitude, 1)
                             challenge.description = "Go to ${newAddress[0].getAddressLine(0)} as fast as possible!"
 
-                        }else{
-                            var results = FloatArray(1)
-                            Location.distanceBetween(userLocation.latitude, userLocation.longitude,
-                                                targetLocation.latitude, targetLocation.longitude,
-                                                results)
-                            if(results[0] < 20){
-                                challenge.isCompleted = true
+                        }
+                        var results = FloatArray(1)
+                        Location.distanceBetween(userLocation.latitude, userLocation.longitude,
+                            targetLocation.latitude, targetLocation.longitude,
+                            results)
+                        if(results[0] < 20){
+                            challenge.isCompleted = true
 
-                                finish()
-                            }
+                            finish()
                         }
                         SaveLoad.saveChallenge(this, challenge)
+                        setGoToMapsButton()
+                        setMapOnceUserLocationExists(geoCoder)
                     }
                 }
-
-            var addressCoordinates = "Sin Datos"
-            if (addresses.size > 0) {
-                address = addresses[0]
-                addressCoordinates = (address!!.getAddressLine(0)
-                        + " " + address!!.postalCode
-                        + " " + address!!.locality
-                        + ", " + address!!.countryName)
-            }
-
-            map.addMarker(
-                MarkerOptions()
-                    .title(addressCoordinates)
-                    .position(userLocation))
-
-            map.addMarker(
-                MarkerOptions()
-                    .title(addressCoordinates)
-                    .position(targetLocation))
-
-            //Draw the line
-            val path: MutableList<LatLng1> = ArrayList()
-            path.add(userLocation)
-            path.add(targetLocation)
-            if (path.isNotEmpty()) {
-                val opts = PolylineOptions().addAll(path).color(Color.BLUE).width(5f)
-                map.addPolyline(opts)
-            }
-
-            val cameraPosition = CameraPosition.builder()
-                .target(userLocation)
-                .zoom(16.0f)
-                .tilt(45.0f)
-                .bearing(45.0f)
-                .build()
-
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),2000,null)
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
+    }
+
+    private fun setMapOnceUserLocationExists(geoCoder: Geocoder) {
+        val addresses = geoCoder.getFromLocation(userLocation.latitude, userLocation.longitude, 5)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        map.isMyLocationEnabled = true
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 20f))
+
+        var addressCoordinates = "Sin Datos"
+        if (addresses.size > 0) {
+            address = addresses[0]
+            addressCoordinates = (address!!.getAddressLine(0)
+                    + " " + address!!.postalCode
+                    + " " + address!!.locality
+                    + ", " + address!!.countryName)
+        }
+
+        map.addMarker(
+            MarkerOptions()
+                .title(addressCoordinates)
+                .position(userLocation)
+        )
+
+        map.addMarker(
+            MarkerOptions()
+                .title(addressCoordinates)
+                .position(targetLocation)
+        )
+
+        //Draw the line
+        val path: MutableList<LatLng1> = ArrayList()
+        path.add(userLocation)
+        path.add(targetLocation)
+        if (path.isNotEmpty()) {
+            val opts = PolylineOptions().addAll(path).color(Color.BLUE).width(5f)
+            map.addPolyline(opts)
+        }
+
+        val cameraPosition = CameraPosition.builder()
+            .target(userLocation)
+            .zoom(16.0f)
+            .tilt(45.0f)
+            .bearing(45.0f)
+            .build()
+
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null)
     }
 
     private fun getDirection(origin: LatLng1, destination: LatLng1): List<LatLng1>{

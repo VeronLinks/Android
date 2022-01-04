@@ -24,12 +24,12 @@ class ChallengesActivity : AppCompatActivity()  {
         bindings.btnBack.setOnClickListener {
             finish()
         }
-
-        initChallenges()
     }
 
     override fun onResume() {
         super.onResume()
+        //Update challenges
+        initChallenges()
         // Update points
         val totalPoints = SaveLoad.load(this).toString()
         "Total points:\n$totalPoints".also { bindings.tvChallengesPoints.text = it }
