@@ -13,16 +13,16 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="357dp"
         android:layout_height="303dp"
+        android:layout_marginBottom="116dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvClaimReward"
-        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintTop_toBottomOf="@+id/tvMapDescription"
+        app:layout_constraintVertical_bias="0.619"
         tools:context=".MapActivity" />
 
     <TextView
-        android:id="@+id/tvClaimReward"
+        android:id="@+id/tvMapDescription"
         android:layout_width="348dp"
         android:layout_height="124dp"
         android:layout_marginTop="48dp"
@@ -32,10 +32,12 @@
         android:autoSizeTextType="uniform"
         android:text="@string/go_to_the_objective_to_gain_points"
         android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBack" />
+        app:layout_constraintTop_toBottomOf="@+id/btnBack"
+        app:layout_constraintVertical_bias="0.062" />
 
     <Button
         android:id="@+id/btnBack"

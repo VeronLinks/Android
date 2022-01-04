@@ -1,5 +1,6 @@
 package es.usj.mastertsa.jchueca.finalproject.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -32,11 +33,12 @@ class ChallengesFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_challenges, container, false)
     }
 
-    public fun initializeChallenge(challenge: Challenge){
+    fun initializeChallenge(challenge: Challenge){
         initializedChallenge = challenge
         updateChallengeView()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateChallengeView(){
 
         if (initializedChallenge != null){
@@ -56,22 +58,23 @@ class ChallengesFragment : Fragment() {
             challengeId = challenge.id
 
             bind?.findViewById<TextView>(R.id.tvChallengeId)?.text = "Challenge ${challenge.id+1}"
-            bind?.findViewById<TextView>(R.id.tvDescription)?.text = "${challenge.description}"
+            bind?.findViewById<TextView>(R.id.tvDescription)?.text = challenge.description
             bind?.findViewById<TextView>(R.id.tvChallengesPoints)?.text = "${challenge.points} pts"
 
             if(isCompleted) {
                 bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.claim_reward)
                 bind?.findViewById<Button>(R.id.btnCancel)?.isEnabled = false
                 bind?.findViewById<TextView>(R.id.tvDescription)?.text = getString(R.string.congratulations)
-            }else{
-                bind?.findViewById<Button>(R.id.btnCancel)?.isEnabled = true
-            }
-
-            if (latitude == 0.0 && longitude == 0.0) {
-                bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.accept)
             }
             else {
-                bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.go_to_map)
+                if (latitude == 0.0 && longitude == 0.0) {
+                    bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.accept)
+                    bind?.findViewById<Button>(R.id.btnCancel)?.isEnabled = false
+                }
+                else {
+                    bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.go_to_map)
+                    bind?.findViewById<Button>(R.id.btnCancel)?.isEnabled = true
+                }
             }
 
             SaveLoad.saveChallenge(activity as AppCompatActivity, challenge)
