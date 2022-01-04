@@ -49,6 +49,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:enabled="false"
         android:paddingHorizontal="0dp"
         android:text="@string/cancel"
         android:textAlignment="center"

@@ -11,10 +11,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import es.usj.mastertsa.jchueca.finalproject.*
-import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityChallengesBinding
-import es.usj.mastertsa.jchueca.finalproject.databinding.FragmentChallengesBinding
 import es.usj.mastertsa.jchueca.finalproject.model.Challenge
-import org.w3c.dom.Text
+
+
+
 
 
 class ChallengesFragment : Fragment() {
@@ -29,10 +29,6 @@ class ChallengesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        activity?.findViewById<Button>(R.id.btnGoToMap)?.setOnClickListener { goToMapOrClaim() }
-        activity?.findViewById<Button>(R.id.btnCancel)?.setOnClickListener { cancel() }
-        updateChallengeView()
-
         return inflater.inflate(R.layout.fragment_challenges, container, false)
     }
 
@@ -42,26 +38,37 @@ class ChallengesFragment : Fragment() {
     }
 
     private fun updateChallengeView(){
+
         if (initializedChallenge != null){
+
             val challenge : Challenge = initializedChallenge!!
+
+            val tag = "frgChallenge${challenge.id}"
+            val tagFragment: Fragment? = activity?.supportFragmentManager?.findFragmentByTag(tag)
+            val bind = tagFragment?.requireView()
+
+            bind?.findViewById<Button>(R.id.btnGoToMap)?.setOnClickListener { goToMapOrClaim() }
+            bind?.findViewById<Button>(R.id.btnCancel)?.setOnClickListener { cancel() }
 
             latitude = challenge.latitude
             longitude = challenge.longitude
             isCompleted = challenge.isCompleted
             challengeId = challenge.id
 
-            activity?.findViewById<TextView>(R.id.tvChallengeId)?.text = "Challenge ${challenge.id+1}"
-            activity?.findViewById<TextView>(R.id.tvDescription)?.text = "${challenge.description}"
-            activity?.findViewById<TextView>(R.id.tvChallengesPoints)?.text = "${challenge.points} pts"
+            bind?.findViewById<TextView>(R.id.tvChallengeId)?.text = "Challenge ${challenge.id+1}"
+            bind?.findViewById<TextView>(R.id.tvDescription)?.text = "${challenge.description}"
+            bind?.findViewById<TextView>(R.id.tvChallengesPoints)?.text = "${challenge.points} pts"
 
             if(isCompleted) {
-                activity?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.claim_reward)
-                activity?.findViewById<Button>(R.id.btnCancel)?.isEnabled = false
-                activity?.findViewById<TextView>(R.id.tvDescription)?.text = getString(R.string.congratulations)
+                bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.claim_reward)
+                bind?.findViewById<Button>(R.id.btnCancel)?.isEnabled = false
+                bind?.findViewById<TextView>(R.id.tvDescription)?.text = getString(R.string.congratulations)
+            }else{
+                bind?.findViewById<Button>(R.id.btnCancel)?.isEnabled = true
             }
 
             if (latitude == 0.0 && longitude == 0.0) {
-                activity?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.accept)
+                bind?.findViewById<Button>(R.id.btnGoToMap)?.text = getString(R.string.accept)
             }
         }
     }

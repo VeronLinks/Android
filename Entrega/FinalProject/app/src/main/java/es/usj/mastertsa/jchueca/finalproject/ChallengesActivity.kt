@@ -5,7 +5,6 @@ import android.os.Bundle
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityChallengesBinding
 import es.usj.mastertsa.jchueca.finalproject.fragments.ChallengesFragment
 import es.usj.mastertsa.jchueca.finalproject.model.Challenge
-import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityMainBinding
 
 
 class ChallengesActivity : AppCompatActivity()  {
@@ -56,8 +55,8 @@ class ChallengesActivity : AppCompatActivity()  {
             id = R.id.frgChallenge2
         }
 
-        val challengeFrag = supportFragmentManager.findFragmentById(id) as
-                ChallengesFragment?
+        val challengeFrag = supportFragmentManager.findFragmentById(id) as ChallengesFragment?
+
         if (challengeFrag == null) {
             val newFragment = ChallengesFragment()
             val transaction = supportFragmentManager.beginTransaction()
