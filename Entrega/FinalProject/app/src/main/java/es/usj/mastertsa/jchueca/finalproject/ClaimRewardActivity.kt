@@ -24,6 +24,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import es.usj.mastertsa.jchueca.finalproject.databinding.ActivityClaimRewardBinding
+import es.usj.mastertsa.jchueca.finalproject.model.Challenge
 import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBuilder
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
@@ -39,6 +40,8 @@ class ClaimRewardActivity : AppCompatActivity() {
 
     private lateinit var bindings: ActivityClaimRewardBinding
     private var permissionGranted = false
+    private var extra: Bundle? = null
+    private var challengeId: Int = 0
     private var uri : Uri? = null
     private val takePicture =
         registerForActivityResult(ActivityResultContracts.TakePicture())
@@ -56,7 +59,9 @@ class ClaimRewardActivity : AppCompatActivity() {
         setContentView(bindings.root)
         supportActionBar!!.hide()
 
-        enableNotifications()
+        extra = intent.extras
+        challengeId = extra?.getInt("challengeId")!!
+
         askForPermission()
 
         bindings.btnBack.setOnClickListener {
@@ -99,13 +104,11 @@ class ClaimRewardActivity : AppCompatActivity() {
     private fun claimReward() {
 
         SaveLoad.save(this, SaveLoad.load(this) + REWARD)
+        SaveLoad.saveChallenge(this, Challenge(challengeId))
 
         val viewIntent = Intent(this, MainActivity::class.java)
         startActivity(viewIntent)
         finish()
-
-        showNotification(true)
-
     }
 
     private fun getPicture() {
@@ -148,86 +151,5 @@ class ClaimRewardActivity : AppCompatActivity() {
         }
     }
 
-    // NOTIFICATIONS
-
-    private val notificationManager : NotificationManagerCompat by lazy {
-        NotificationManagerCompat.from(applicationContext)
-    }
-
-    private fun enableNotifications() {
-        val enabled = notificationManager.areNotificationsEnabled()
-        if (!enabled){
-            val snackBar = Snackbar.make(
-                findViewById(R.id.mainLayout), // TODO: Desde recompensas
-                "Enable notifications",
-                Snackbar.LENGTH_LONG
-            ).setAction("ENABLE"){
-                openNotificationsSettingsForApp()
-            }.show()
-        }
-    }
-
-    private fun showNotification(isStarting: Boolean) {
-        enableNotifications()
-        generateNotification(isStarting)
-    }
-
-    private fun generateNotification(starting: Boolean) {
-        var notification = if (starting) NotificationDatabase.enteringNotification
-        else NotificationDatabase.existingNotification(applicationContext)
-        val channelId = NotificationUtils.createNotificationChannel(this, notification)
-        val notificationStyle = NotificationCompat.BigTextStyle()
-            .bigText(notification.text)
-            .setBigContentTitle(notification.title)
-            .setSummaryText(notification.summary)
-
-        val notifyIntent = Intent(this, MainActivity::class.java) // TODO: Redirigir a recompensas
-        notifyIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val notifyPendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            notifyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val notificationCompatBuilder: NotificationCompat.Builder = NotificationCompat.Builder(
-            applicationContext, channelId!!
-        )
-        GlobalNotificationBuilder.notificationCompatBuilderInstance = notificationCompatBuilder
-
-        val playingNotification: Notification = notificationCompatBuilder
-            .setStyle(notificationStyle)
-            .setContentTitle(notification.contentTitle)
-            .setContentText(notification.contentText)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setLargeIcon(
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.mipmap.ic_launcher
-                )
-            )
-            .setContentIntent(notifyPendingIntent)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setColor(ContextCompat.getColor(applicationContext, R.color.purple_500))
-            .setCategory(Notification.CATEGORY_REMINDER)
-            .setPriority(notification.priority)
-            .setVisibility(notification.channelLockscreenVisibility)
-            .build()
-        notificationManager.notify(
-            current_id,
-            playingNotification
-        )
-    }
-
-    companion object {
-        var current_id = 0
-    }
-
-    private fun openNotificationsSettingsForApp() {
-        val intent = Intent()
-        intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
-        intent.putExtra("app_package", packageName)
-        intent.putExtra("app_uid", applicationInfo.uid)
-        startActivity(intent)
-    }
 
 }

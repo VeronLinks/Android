@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         bindings.btnChallenges.setOnClickListener {
             val intent = Intent(this@MainActivity,
-                MainActivity::class.java
+                ChallengesActivity::class.java
             )
             startActivity(intent)
         }
