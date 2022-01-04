@@ -43,7 +43,8 @@ import es.usj.mastertsa.jchueca.finalproject.notifications.GlobalNotificationBui
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationDatabase
 import es.usj.mastertsa.jchueca.finalproject.notifications.NotificationUtils
 
-private const val RADIUS = 100
+private const val RADIUS = 50
+private const val MIN_DISTANCE_TO_COMPLETE = 20
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -143,7 +144,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     Location.distanceBetween(userLocation.latitude, userLocation.longitude,
                         targetLocation.latitude, targetLocation.longitude,
                         results)
-                    if(results[0] < 20){
+                    if(results[0] < MIN_DISTANCE_TO_COMPLETE){
                         challenge.isCompleted = true
 
                         showNotification()
